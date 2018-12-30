@@ -191,12 +191,12 @@ public class Cal : MonoBehaviour {
             }
 
 
-            //float rate = (Group[i].earn - Group[i].lost) / Group[i].earn;
+            
             float earn = Group[i].earn;
             float lost = Mathf.Abs(Group[i].lost);
             float cost = lost + totalCost;
 
-            //float cost = costF + costP;
+          
 
             float rate = (earn - cost) / earn;
 
@@ -207,7 +207,7 @@ public class Cal : MonoBehaviour {
             //Group[i].p = 800;
         }
 
-        //A.Articles = A.Articles.OrderBy(w => w.Distance).ToList();
+       
 
         Group = Group.OrderBy(item => item.rate).ToArray<Asset>();
 
