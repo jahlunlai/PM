@@ -185,7 +185,7 @@ public class Cal : MonoBehaviour {
             float lost = Mathf.Abs(Group[i].lost);
             float cost = lost + totalCost;
 
-            float rate = (earn - cost) / earn;
+            float rate = earn / cost ;
 
             Debug.Log("第 " + Group[i].id + " 組的獲利率為： " + rate );
             Group[i].rate = rate;
