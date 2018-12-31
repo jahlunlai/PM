@@ -9,16 +9,18 @@ public class Cal : MonoBehaviour {
     [System.Serializable]
     public class Asset
     {
-        public int id;
-        public int bp = 0;
-        public int bf = 0;
-        public int p = 800;
-        public int f = 800;
-        public int earn = 0;
-        public int lost = 0;
-        public int avgP = 0;
-        public int avgF = 0;
-        public float rate;
+        public int id; //組別
+        public int bp = 0; //購買的螢幕或燒錄機
+        public int bf = 0; //購買的印表機或隨身碟
+        public int p = 800;//螢幕或燒錄機的存貨
+        public int f = 800;//印表機或隨身碟的存貨
+        public int earn = 0;//賣出所得
+        public int lost = 0;//存貨成本
+
+        public int pP = 0;//邏輯判斷用
+        public int pF = 0;//同上
+
+        public float rate;//獲利率
 
     }
     public Asset[] Group = new Asset[11];
@@ -35,20 +37,20 @@ public class Cal : MonoBehaviour {
         }
         //螢幕P 燒錄機F
         //印表機P 隨身碟F
+        int totalCost = 3360000 + 2560000;
+        int pStockCost = 3360000 / 800;
+        int fStockCost = 2560000 / 800;
 
+        //Buy(buyer,seller,category,amount,price)
         Buy(Group[1].id, Group[4].id, "p", 250, 4500);//
         Buy(Group[1].id, Group[4].id, "f", 250, 4500);//
-
         Buy(Group[1].id, Group[4].id, "f", 150, 4000);
         Buy(Group[1].id, Group[10].id, "f", 200, 4800);
         Buy(Group[1].id, Group[10].id, "p", 200, 3800);
-
         Buy(Group[1].id, Group[8].id, "f", 100, 7500);//
         Buy(Group[1].id, Group[8].id, "p", 100, 7500);//
-
         Buy(Group[1].id, Group[8].id, "p", 49, 6000);
         Buy(Group[1].id, Group[10].id, "p", 100, 4800);
-
 
         Buy(Group[3].id, Group[10].id, "p", 50, 5250);
         Buy(Group[3].id, Group[10].id, "f", 50, 5250);
@@ -57,12 +59,9 @@ public class Cal : MonoBehaviour {
         Buy(Group[3].id, Group[2].id, "p", 400, 4335);
         Buy(Group[3].id, Group[2].id, "f", 400, 4335);
 
-
         Buy(Group[5].id, Group[10].id, "p", 200, 4250);
-
         Buy(Group[5].id, Group[10].id, "p", 100, 4200);//
         Buy(Group[5].id, Group[10].id, "f", 100, 4200);//
-
         Buy(Group[5].id, Group[4].id, "p", 300, 5280);
         Buy(Group[5].id, Group[4].id, "f", 400, 3520);
         Buy(Group[5].id, Group[6].id, "p", 100, 5000);//
@@ -71,12 +70,10 @@ public class Cal : MonoBehaviour {
 
         Buy(Group[7].id, Group[6].id, "p", 300, 4400);
         Buy(Group[7].id, Group[6].id, "f", 300, 4400);
-
         Buy(Group[7].id, Group[2].id, "p", 50, 4500);
         Buy(Group[7].id, Group[2].id, "p", 150, 4590);
         Buy(Group[7].id, Group[2].id, "f", 50, 3500);
         Buy(Group[7].id, Group[2].id, "f", 150, 3520);
-
         Buy(Group[7].id, Group[4].id, "p", 100, 4300);
         Buy(Group[7].id, Group[10].id, "p", 100, 3900);
         Buy(Group[7].id, Group[10].id, "f", 200, 3840);
@@ -88,10 +85,8 @@ public class Cal : MonoBehaviour {
         Buy(Group[9].id, Group[2].id, "f", 100, 3740);
         Buy(Group[9].id, Group[2].id, "f", 50, 3460);
         Buy(Group[9].id, Group[2].id, "f", 50, 3680);
-
         Buy(Group[9].id, Group[6].id, "f", 50, 4200); //
         Buy(Group[9].id, Group[6].id, "p", 50, 4200);//
-
         Buy(Group[9].id, Group[8].id, "f", 200, 7500);
 
 
@@ -133,11 +128,7 @@ public class Cal : MonoBehaviour {
         Buy(Group[10].id, Group[5].id, "p", 50, 4250);//
         Buy(Group[10].id, Group[5].id, "f", 50, 4250);//
 
-        
 
-        float totalCost = 3360000 + 2560000;
- 
-        
         for (int i = 1; i < Group.Length; i++)
         {
             string itemCate1;
@@ -146,8 +137,8 @@ public class Cal : MonoBehaviour {
             if ( Group[i].p != 0 || Group[i].f != 0)
             {
                 
-                Group[i].lost -= Mathf.Abs(Group[i].p) * (Group[i].avgP/800);
-                Group[i].lost -= Mathf.Abs(Group[i].f) * (Group[i].avgF/800);
+                Group[i].lost -= Mathf.Abs(Group[i].p) * pStockCost;
+                Group[i].lost -= Mathf.Abs(Group[i].f) * fStockCost;
 
                 if (Group[i].id % 2 == 0)
                 {
@@ -169,8 +160,8 @@ public class Cal : MonoBehaviour {
             {
                 
 
-                Group[i].lost -= (700-Group[i].bp) * (Group[i].avgP / 800);
-                Group[i].lost -= (700 - Group[i].bf) * (Group[i].avgF / 800);
+                Group[i].lost -= (700-Group[i].bp) * pStockCost;
+                Group[i].lost -= (700 - Group[i].bf) * fStockCost;
 
 
 
@@ -190,25 +181,20 @@ public class Cal : MonoBehaviour {
 
             }
 
-
-            
             float earn = Group[i].earn;
             float lost = Mathf.Abs(Group[i].lost);
             float cost = lost + totalCost;
-
-          
 
             float rate = (earn - cost) / earn;
 
             Debug.Log("第 " + Group[i].id + " 組的獲利率為： " + rate );
             Group[i].rate = rate;
             
-            //Group[i].f = 800;
-            //Group[i].p = 800;
+           
         }
 
-       
-
+      
+        //照獲利率排序
         Group = Group.OrderBy(item => item.rate).ToArray<Asset>();
 
         for (int i = 0; i < Group.Length; i++)
@@ -219,6 +205,7 @@ public class Cal : MonoBehaviour {
 
     }
 	
+    //function
     void Buy(int buyer, int seller, string category, int amount, int price)
     {
         switch (category)
@@ -229,10 +216,9 @@ public class Cal : MonoBehaviour {
                     
                     Group[buyer].bp += amount;
                     Group[seller].p -= amount;
-                    //Group[buyer].lost -= amount * price;
                     Group[seller].earn += amount * price;
 
-                    Group[seller].avgP += price * amount;
+                    Group[seller].pP += price * amount;
                 }
                 break;
             case "f":
@@ -240,10 +226,9 @@ public class Cal : MonoBehaviour {
                    
                     Group[buyer].bf += amount;
                     Group[seller].f -= amount;
-                    //Group[buyer].lost -= amount * price;
                     Group[seller].earn += amount * price;
 
-                    Group[seller].avgF += price * amount;
+                    Group[seller].pF += price * amount;
                 }
                 break;
             default:
