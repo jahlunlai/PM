@@ -17,8 +17,8 @@ public class Cal : MonoBehaviour {
         public int earn = 0;//賣出所得
         public int lost = 0;//存貨成本
 
-        public int pP = 0;//邏輯判斷用
-        public int pF = 0;//同上
+        public int pP = 0;
+        public int pF = 0;
 
         public float rate;//獲利率
 
